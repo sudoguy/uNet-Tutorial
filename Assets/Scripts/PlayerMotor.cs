@@ -6,6 +6,7 @@ public class PlayerMotor : MonoBehaviour {
 	private Vector3 velocity = Vector3.zero;
 	private Vector3 cameraRotation = Vector3.zero;
 	private Vector3 rotation = Vector3.zero;
+	private Vector3 thrusterForce = Vector3.zero;
 
 	[SerializeField]
 	private Camera cam;
@@ -35,7 +36,13 @@ public class PlayerMotor : MonoBehaviour {
 		cameraRotation = _cameraRotation;
 	}
 
-	// Run every physics iteration
+    // Get a force vector for our thrusters
+    public void ApplyThruster(Vector3 _thrusterForce)
+    {
+        thrusterForce = _thrusterForce;
+    }
+
+    // Run every physics iteration
 	void FixedUpdate()
 	{
 		PerformMovement();
@@ -49,6 +56,11 @@ public class PlayerMotor : MonoBehaviour {
 		{
 			rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
 		}
+
+	    if (thrusterForce != Vector3.zero)
+	    {
+	        rb.AddForce(thrusterForce*Time.fixedDeltaTime, ForceMode.Acceleration);
+	    }
 	}
 
 	// Perform Rotation
@@ -61,6 +73,8 @@ public class PlayerMotor : MonoBehaviour {
 			cam.transform.Rotate(-cameraRotation);
 		}
 	}
+
+
 
 
 }
